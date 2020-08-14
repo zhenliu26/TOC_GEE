@@ -19,6 +19,11 @@ $ pip install numpy
 
 > Tips: Don't forget to authorize the Google Earth Engine account by ee.Authenticate().
 
+Before calling the TOC functions, move the TOC_GEE.py to the project folder. And, import the library in the Working script.
+```python
+import TOC_GEE
+```
+
 ### TOC_Image
 
 The parameters in the TOC_Image function are:
