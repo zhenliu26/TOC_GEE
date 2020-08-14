@@ -12,16 +12,25 @@ $ pip install -U matplotlib
 $ pip install numpy
 ```
 ## Features
-- **Save Time. Files and calculation are all on the cloud, drawing is on the local computer**
-- **Provide function to export coordinates to be operated on the software**
+- **Save Time. Files and calculation are all on the Google Earth Engine, while drawing the chart is on the local computer**
+- **Provide function to export coordinates to be operated on the TOC program*
 
-## WorkFlow
+## Functions
 
 > Tips: Don't forget to authorize the Google Earth Engine account by ee.Authenticate().
 
-### Step 1: restore the feature collection to the local
+### TOC_Image
 
-Open the restoretool.py at first. Be sure that change the output properties, sample feature collection address, and save address is correct. Click "run" to save the featurecolelction file in Google earth engine to the local.
+The parameters in the TOC_Image function are:
+- img: (ee.Image) the image which contains the reference band and index bands.
+- QCbandname: (String) the band name of QC band
+- IndexbandnameList: (ee.List/list) the list of index band names
+- thresholdList: (ee.List/list) the list of thresholds, format like [[],[],[],[],[]] (the same order as the name list)
+- (number) always be -1
+- nameList: (list) The list of band names
+- boolcorrectcorner: (bool) whether to show the correct corners on the diagram
+- booluniformline: (bool) whether to show uniform line on the diagram
+- unit:(str) the unit name
 
 ```python
 outProperty = ['idNum','ran','startDate']
