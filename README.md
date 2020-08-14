@@ -26,11 +26,11 @@ The parameters in the TOC_Image function are:
 - QCbandname: (String) the band name of QC band
 - IndexbandnameList: (ee.List/list) the list of index band names
 - thresholdList: (ee.List/list) the list of thresholds, format like [[],[],[],[],[]] (the same order as the name list)
-- (number) always be -1
+- noDataValue: (number) always be -1
 - nameList: (list) The list of band names
 - boolcorrectcorner: (bool) whether to show the correct corners on the diagram
 - booluniformline: (bool) whether to show uniform line on the diagram
-- unit:(str) the unit name
+- unit:(String) the unit name
 
 ```python
 outProperty = ['idNum','ran','startDate']
