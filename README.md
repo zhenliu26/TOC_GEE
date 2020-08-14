@@ -26,7 +26,7 @@ import TOC_GEE
 
 ### TOC_Image
 
-The parameters in the TOC_Image function are:
+This function will generate the TOC curve from the ee.Image (the file format in the Google Earth Engine) and display it. The parameters in the TOC_Image function are:
 - img: (ee.Image) the image which contains the reference band and index bands.
 - QCbandname: (String) the band name of QC band
 - IndexbandnameList: (ee.List/list) the list of index band names
@@ -37,10 +37,9 @@ The parameters in the TOC_Image function are:
 - booluniformline: (bool) whether to show uniform line on the diagram
 - unit:(String) the unit name
 
+The sample code is like:
 ```python
-outProperty = ['idNum','ran','startDate']
-sample = ee.FeatureCollection('users/BAI_debug/sampleMidWest')
-saveAddress = "data\source_test.csv"
+TOC_GEE.TOC_Image(img,'QC',['mndwi','ndvi'],[ee.List.sequence(-1,1,0.1,None).reverse(),ee.List.sequence(-1,1,0.1,None)],-1,['mndwi','ndvi'],unit='pixels')
 ```
 
 ### Step 2: data preparation
