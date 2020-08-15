@@ -13,7 +13,12 @@ $ pip install numpy
 ```
 ## Features
 - **Save Time. Files and calculation are all on the Google Earth Engine, while drawing the chart is on the local computer**
-- **Provide function to export coordinates to be operated on the TOC program*
+- **Provide function to export coordinates to be operated on the TOC program**
+
+## Data
+There wiil be two types of data format in Google Earth Engine. If the data source is the image where all pixels have reference information, TOC_Image and TOC_Image_coor are the functions to generate TOC curves. If the dataset is featurecollection that stores the sample records, TOC_FeatureCollection and TOC_Feature_coor are used to generate TOC curves. So for the image, the image should contains the band of reference information and the bands of index variable (RS indices, band values, possibilities). 
+- In the reference information, the presence should be 1, the absence should be 0, the No Data should be a number (except 0 or 1). 
+- For the threshold squence, it is determined by the index variable. If the higher index variable means the higher possibility of presence, the sequence of the thresholds should be from high to low. For example, because the higher MNDWI means the higher possiblity of water, so the thresholds for MNDWI should be from 1 to -1. If the lower index variable means the higher possibility of presence, the sequence of the thresholds should be from low to high. For example, because the lower NDVI means the higher possiblity of water, so the thresholds for NDVI should be from -1 to 1. 
 
 ## Functions
 
