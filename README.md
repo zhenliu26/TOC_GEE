@@ -17,8 +17,8 @@ $ pip install numpy
 
 ## Data
 There wiil be two types of data format in Google Earth Engine. If the data source is the image where all pixels have reference information, TOC_Image and TOC_Image_coor are the functions to generate TOC curves. If the dataset is featurecollection that stores the sample records, TOC_FeatureCollection and TOC_Feature_coor are used to generate TOC curves. So for the image, the image should contains the band of reference information and the bands of index variable (RS indices, band values, possibilities). 
-- In the reference information, the presence should be 1, the absence should be 0, the No Data should be a number (except 0 or 1). 
-- For the threshold squence, it is determined by the index variable. If the higher index variable means the higher possibility of presence, the sequence of the thresholds should be from high to low. For example, because the higher MNDWI means the higher possiblity of water, so the thresholds for MNDWI should be from 1 to -1. If the lower index variable means the higher possibility of presence, the sequence of the thresholds should be from low to high. For example, because the lower NDVI means the higher possiblity of water, so the thresholds for NDVI should be from -1 to 1. 
+- In the reference information, the presence should be 1, the absence should be 0, the No Data should be a number (except 0 or 1, always -1). 
+- For the threshold squence, it is determined by the index variable. If the higher index variable means the higher possibility of presence, the sequence of the thresholds should be from high to low. For example, because the higher MNDWI means the higher possiblity of water, so the thresholds for MNDWI should be from 1 to -1. If the lower index variable means the higher possibility of presence, the sequence of the thresholds should be from low to high. For example, because the lower NDVI means the higher possiblity of water, so the thresholds for NDVI should be from -1 to 1.
 
 ## Functions
 
@@ -47,6 +47,19 @@ The sample code is like:
 TOC_GEE.TOC_Image(img,'QC',['mndwi','ndvi'],[ee.List.sequence(-1,1,0.1,None).reverse(),ee.List.sequence(-1,1,0.1,None)],-1,['mndwi','ndvi'],unit='pixels')
 ```
 
+### TOC_Image_coor
+
+This function will calculate the coordinates of the TOC curve from the ee.Image (the file format in the Google Earth Engine) and export it. (It can handle one image once) The parameters in the TOC_Image function are:
+- input_binary: (ee.Image) Reference image. presence is 1, absence is 0
+- input_index: (ee.Image) Index image.
+- thresholdList: (ee.List/list) The list of thresholds. (from high to low or from low to high)
+- noDataValue: (number) always be -1
+- exportVariable: (string / default is False) The default parameter is False (not export the coordinates), string should be output of variables. (extension should be txt)
+
+The sample code is like:
+```python
+TOC_GEE.TOC_Image_coor(QC_Image ,MNDWI_Image, ee.List.sequence(-1,1,0.1,None).reverse(),-1,exportCoor='coordinates1.txt',exportVariable='v1.txt')
+```
 ### Step 2: data preparation
 
 Change date name, ID name in both csv and GEE, and the source name
