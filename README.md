@@ -16,7 +16,7 @@ $ pip install numpy
 - **Provide function to export coordinates to be operated on the TOC program**
 
 ## Data
-There wiil be two types of data format in Google Earth Engine. If the data source is the image where all pixels have reference information, TOC_Image and TOC_Image_coor are the functions to generate TOC curves. If the dataset is featurecollection that stores the sample records, TOC_FeatureCollection and TOC_Feature_coor are used to generate TOC curves. So for the image, the image should contains the band of reference information and the bands of index variable (RS indices, band values, possibilities). 
+There are two types of data format in Google Earth Engine -- ee.Image and ee.FeatureCollection. If the data source is the image where all pixels have reference information, TOC_Image and TOC_Image_coor are the functions to generate TOC curves. If the dataset is featurecollection that stores the sample records, TOC_FeatureCollection and TOC_Feature_coor are used to generate TOC curves. For the image, the image should contains the band of reference information and the bands of index variable (RS indices, band values, possibilities). 
 - In the reference information, the presence should be 1, the absence should be 0, the No Data should be a number (except 0 or 1, always -1). 
 - For the threshold squence, it is determined by the index variable. If the higher index variable means the higher possibility of presence, the sequence of the thresholds should be from high to low. For example, because the higher MNDWI means the higher possiblity of water, so the thresholds for MNDWI should be from 1 to -1. If the lower index variable means the higher possibility of presence, the sequence of the thresholds should be from low to high. For example, because the lower NDVI means the higher possiblity of water, so the thresholds for NDVI should be from -1 to 1.
 
@@ -79,37 +79,4 @@ The sample code is like:
 ```python
 TOC_GEE.TOC_FeatureCollection(ftc,'QC',['mndwi','ndvi'],[ee.List.sequence(-1,1,0.1,None).reverse(),ee.List.sequence(-1,1,0.1,None)],['mndwi','ndvi'],boolcorrectcorner=True,Classnmae='class',ClassList={'valley':20,'plain':40,'mountain':40})
 ```
-### Step 2: data preparation
 
-Change date name, ID name in both csv and GEE, and the source name
-```python
-# import mainUI
-ee.Initialize()
-# date property name in csv
-dateName = "startDate"
-# ID property name in csv
-IDName = 'idNum'
-# ID property name in GEE
-IDGEE = 'idString'
-# date property name in GEE
-dateGEE = 'startDate'
-sourceName = 'data/source_test.csv'
-#  the dataframe to store the sample data. (it will be updated everytime you click enter)
-df = pd.read_csv(sourceName)
-sample = ee.FeatureCollection('users/BAI_debug/sampleMidWest')
-classCode = ['NotAssessed','water','non-water']
-```
-
-Because the imagecollection can't be stored in Google Earth Engine Asset, so that the final result (which is the imagecollection in Google Earth Engine) should be calculated in the data preparation module.
-```python
-# data processing
-finalResult = ee.ImageCollection(image)
-```
-### Step 3: hand label
-
-When you run the code, the interface will be shown like below.
-[![UI](https://raw.githubusercontent.com/zhenliu26/Images/master/sampleUI.jpg)]()
-
-You can select the date and feature. The layers controller will help to change the background layer. When you are certain about the class of the target point, change the class and **Click the Enter**. The record will be updated automatically.
-
-### Step 4: upload back to Google Earth Engine
