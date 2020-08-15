@@ -33,7 +33,7 @@ import TOC_GEE
 
 ### TOC_Image
 
-This function will generate the TOC curve from the ee.Image (the file format in the Google Earth Engine) and display it. The parameters in the TOC_Image function are:
+This function will generate the TOC curve from the ee.Image (the data format in the Google Earth Engine) and display it. The parameters in the TOC_Image function are:
 - img: (ee.Image) the image which contains the reference band and index bands.
 - QCbandname: (String) the band name of QC band
 - IndexbandnameList: (ee.List/list) the list of index band names
@@ -51,7 +51,7 @@ TOC_GEE.TOC_Image(img,'QC',['mndwi','ndvi'],[ee.List.sequence(-1,1,0.1,None).rev
 
 ### TOC_Image_coor
 
-This function will calculate the coordinates of the TOC curve from the ee.Image (the file format in the Google Earth Engine) and export it. (It can handle one image once) The parameters in the TOC_Image_coor function are:
+This function will calculate the coordinates of the TOC curve from the ee.Image (the data format in the Google Earth Engine) and export it. (It can handle one index variable once) The parameters in the TOC_Image_coor function are:
 - input_binary: (ee.Image) Reference image. presence is 1, absence is 0
 - input_index: (ee.Image) Index image.
 - thresholdList: (ee.List/list) The list of thresholds. (from high to low or from low to high)
@@ -65,7 +65,7 @@ TOC_GEE.TOC_Image_coor(QC_Image ,MNDWI_Image, ee.List.sequence(-1,1,0.1,None).re
 
 ### TOC_FeatureCollection
 
-This function will generate the TOC curve from the ee.FeatureCollection (the file format in the Google Earth Engine) and display it. The parameters in the TOC_FeatureCollection function are:
+This function will generate the TOC curve from the ee.FeatureCollection (the data format in the Google Earth Engine) and display it. The parameters in the TOC_FeatureCollection function are:
 - FC: (ee.FeatureCollection) featurecollection that contains reference and index properties
 - QCName: (string) The name of reference property
 - IndexnameList: (ee.List) The list of index property names
@@ -80,5 +80,22 @@ This function will generate the TOC curve from the ee.FeatureCollection (the fil
 The sample code is like:
 ```python
 TOC_GEE.TOC_FeatureCollection(ftc,'QC',['mndwi','ndvi'],[ee.List.sequence(-1,1,0.1,None).reverse(),ee.List.sequence(-1,1,0.1,None)],['mndwi','ndvi'],boolcorrectcorner=True,Classnmae='class',ClassList={'valley':20,'plain':40,'mountain':40})
+```
+
+### TOC_Feature_coor
+
+This function will calculate the coordinates of the TOC curve from the ee.FeatureCollection (the data format in the Google Earth Engine) and export it. (It can handle one index variable once) The parameters in the TOC_Feature_coor function are:
+- featurecollection_input: (ee.FeatureCollection) featurecollection that contains reference and index properties
+- QCname: (string) The name of reference property
+- Indexname: (string) The name of index property
+- thresholdList: (ee.List/list) The list of thresholds. (from high to low or from low to high)
+- Classname: (string) The name of class property when applying stratified sampling
+- ClassList: (disctionary) The size of stratums {classname: classsize, classname: classsize ...}
+- exportCoor: (string / default is False) The default parameter is False (not export the coordinates), string should be output path of coordinates. (extension should be txt)
+- exportVariable: (string / default is False) The default parameter is False (not export the coordinates), string should be output of variables. (extension should be txt)
+
+The sample code is like:
+```python
+TOC_GEE.TOC_Feature_coor(ftc,'QC','mndwi',ee.List([0,0.5,1]),boolcorrectcorner=True,Classnmae='class',ClassList={'valley':20,'plain':40,'mountain':40},exportCoor='coordinates1.txt',exportVariable='v1.txt')
 ```
 
