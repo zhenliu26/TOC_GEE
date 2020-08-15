@@ -26,7 +26,7 @@ If the data source is the image where all pixels have reference information, **T
 
 > Tips: Don't forget to authorize the Google Earth Engine account by ee.Authenticate().
 
-Before calling the TOC functions, move the TOC_GEE.py to the project folder. And, import the library in the Working script.
+Before calling the TOC functions, move the TOC_GEE.py to the project folder. And, import the library in the working script.
 ```python
 import TOC_GEE
 ```
