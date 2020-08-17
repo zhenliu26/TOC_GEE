@@ -22,6 +22,9 @@ If the data source is the image where all pixels have reference information, **T
 - In the reference information, the presence should be 1, the absence should be 0, the No Data should be a number (except 0 or 1, always -1). 
 - For the threshold squence, it is determined by the index variable. If the higher index variable means the higher possibility of presence, the sequence of the thresholds should be from high to low. For example, because the higher MNDWI means the higher possiblity of water, so the thresholds for MNDWI should be from 1 to -1. If the lower index variable means the higher possibility of presence, the sequence of the thresholds should be from low to high. For example, because the lower NDVI means the higher possiblity of water, so the thresholds for NDVI should be from -1 to 1.
 
+## sample
+The sample is in the github. Try it before you start using this library to check the environment. Here is [sample](https://github.com/zhenliu26/TOC_GEE/blob/master/sample.py).
+
 ## Functions
 
 > Tips: Don't forget to authorize the Google Earth Engine account by ee.Authenticate().
