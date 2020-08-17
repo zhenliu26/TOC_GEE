@@ -99,3 +99,12 @@ The sample code is like:
 TOC_GEE.TOC_Feature_coor(ftc,'QC','mndwi',ee.List([0,0.5,1]),boolcorrectcorner=True,Classnmae='class',ClassList={'valley':20,'plain':40,'mountain':40},exportCoor='coordinates1.txt',exportVariable='v1.txt')
 ```
 
+### AUCfromResult
+This is a additional function to calculate the AUC from the outputs of TOC_Image_coor and TOC_Feature_coor. The only input is the result of them.
+
+The sample code is like:
+```python
+a= TOC_GEE.TOC_Image_coor(QC,MNDWI,ee.List.sequence(-1,1,0.1,None).reverse(),-1,exportCoor='coordinates4.txt',exportVariable='v1.txt')
+AUC_ftc = TOC_GEE.AUCfromResult(a)
+```
+
