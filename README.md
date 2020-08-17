@@ -105,6 +105,6 @@ This is a additional function to calculate the AUC from the outputs of TOC_Image
 The sample code is like:
 ```python
 a= TOC_GEE.TOC_Image_coor(QC,MNDWI,ee.List.sequence(-1,1,0.1,None).reverse(),-1,exportCoor='coordinates4.txt',exportVariable='v1.txt')
-AUC_ftc = TOC_GEE.AUCfromResult(a)
+AUC = TOC_GEE.AUCfromResult(a)
 ```
 
