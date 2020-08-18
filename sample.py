@@ -13,7 +13,7 @@ img1 = getwater(ee.Image('projects/cloudtostreet/ML/coincident_S1S2_chipped/USA_
 MNDWI = img1.select('mndwi')
 NDVI = img1.select('ndvi')
 QC = img1.select('QC')
-ftc = ee.FeatureCollection('users/BAI_debug/midwestData')
+ftc = ee.FeatureCollection('projects/cloudtostreet/TOC/Midwest2019/midwestData')
 
 
 def normalized(num1, num2):
