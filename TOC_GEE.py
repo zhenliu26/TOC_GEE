@@ -312,8 +312,7 @@ class painter_Generator:
         plt.show()
 
     def paintOne(self, index, Name, marker):
-        plt.plot(self.Xlist[index], self.Ylist[index], marker + '-', label=Name, picker=2)
-        # plt.plot(self.Xlist[index], self.Ylist[index], marker+'-', label=Name, picker=2)
+        plt.plot(self.Xlist[index], self.Ylist[index], marker + '-', label=Name)
         handles, labels = plt.gca().get_legend_handles_labels()
         numCurve = len(handles)
         # change the order of maximum and minimum
