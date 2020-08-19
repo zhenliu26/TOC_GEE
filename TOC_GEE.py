@@ -366,47 +366,7 @@ class painter_Generator:
     def showLabel(self,list_label):
         for item in list_label:
             plt.text(float(item[0]), float(item[1]), item[2])
-    def ClickReact(self, thresholdTable, indexCombo, thresholdDigits):
-        fig=self.fig
-        self.clickIndex = indexCombo.currentIndex()
-        x_for_label = self.Xlist[self.clickIndex]
-        y_for_label = self.Ylist[self.clickIndex]
-        label_dis = self.labelList[self.clickIndex]
 
-        def onpick(event):
-            thisline = event.artist
-            xdata = thisline.get_xdata()
-            ydata = thisline.get_ydata()
-            ind = event.ind
-            # points = tuple(zip(xdata[ind], ydata[ind]))
-            index_label = -1
-            # print(ind)
-            # print(xdata.shape)☺
-            if(np.array_equal(x_for_label,xdata)):
-                index_label=np.array([ind])[0,0]
-            # print(index_label)
-            # print(x_for_label)
-
-            # if(xdata==x_for_label):
-            #     index_label = ind[0]
-            #     print(index_label)
-            if(index_label>=0):
-                # print(ind)
-                #
-                # print(index_label)
-                # print('hello')
-                threshold_digits = int(thresholdDigits.text())
-                row = thresholdTable.rowCount()
-                formatThreshold='{0:.'+str(threshold_digits)+'f}'
-                thresholdTable.insertRow(thresholdTable.rowCount())
-                thresholdTable.setItem(row, 0, QTableWidgetItem(str(xdata[ind][0])))
-                thresholdTable.setItem(row, 1, QTableWidgetItem(str(ydata[ind][0])))
-                if (label_dis[index_label]=='origin' or label_dis[index_label]=='end'):
-                    thresholdTable.setItem(row, 2, QTableWidgetItem(label_dis[index_label]))
-                else:
-                    thresholdTable.setItem(row, 2, QTableWidgetItem(formatThreshold.format((float(label_dis[index_label])))))
-
-        fig.canvas.mpl_connect('pick_event', onpick)
 
 # ---------- This part is the relevant functions for painter----------
 def decimalPlace(maximum, tenPower):
