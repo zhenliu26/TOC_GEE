@@ -52,7 +52,7 @@ def TOC_Image_coor(input_binary: ee.Image, input_index: ee.Image, thresholdList:
     return result_output
 def TOC_Image(img: ee.Image, QCbandname: str, IndexbandnameList: ee.List, thresholdList: ee.List, noDataValue: int, nameList: list,
               boolcorrectcorner: bool = False,
-              booluniformline: bool = False) -> None:
+              booluniformline: bool = False, unit: str = 'observations') -> None:
     '''
     This is the function to show the TOC curve.
     :param img: (ee.Image) the image which contains the reference band and index bands.
@@ -63,6 +63,7 @@ def TOC_Image(img: ee.Image, QCbandname: str, IndexbandnameList: ee.List, thresh
     :param nameList: (list) The list of band names
     :param boolcorrectcorner: (bool) whether to show the correct corners on the diagram
     :param booluniformline: (bool) whether to show uniform line on the diagram
+    :param unit: (str) the unit of each record
     :return: no return
     '''
     # change the format to ee format
@@ -102,17 +103,17 @@ def TOC_Image(img: ee.Image, QCbandname: str, IndexbandnameList: ee.List, thresh
     Ylist = np.array(Ylist)
     curveNum = len(Xlist)
 
-    painter = painter_Generator(Xlist, Ylist, 'observations')
+    painter = painter_Generator(Xlist, Ylist, unit)
     painter.paintInit(boolUniform=booluniformline, boolCorrectcorner=boolcorrectcorner)
     for i in range(len(nameList)):
         if (boolcorrectcorner):
             painter.correctCorner(i)
         painter.paintOne(i, nameList[i], '^')
     painter.show()
-def TOC_feature_coor(featurecollection_input: ee.FeatureCollection, QCname: str, Indexname: str, thresholdList: ee.List, Classname: str = None,
+def TOC_Feature_coor(featurecollection_input: ee.FeatureCollection, QCname: str, Indexname: str, thresholdList: ee.List, Classname: str = None,
                      ClassList: dict = None,
                      exportCoor: str = False,
-                     exportVariable: str = False) -> object:
+                     exportVariable: str = False) -> None:
     '''
     This function is to export the coordinates of the TOC curve. The input format is the ee.FeatureCollection.
     :param featurecollection_input: (ee.FeatureCollection) featurecollection that contains reference and index properties
@@ -184,7 +185,7 @@ def TOC_feature_coor(featurecollection_input: ee.FeatureCollection, QCname: str,
 def TOC_FeatureCollection(FC: ee.featurecollection, QCName: str, IndexnameList: ee.List, thresholdList: ee.List, nameList: list, boolcorrectcorner: bool = False,
                           booluniformline: bool = False,
                           Classname: str = None,
-                          ClassList: dict = None) -> None:
+                          ClassList: dict = None, unit: str = 'observations') -> None:
     '''
     This is the function to show the TOC curves from the FeatureCollection.
     :param FC: (ee.FeatureCollection) featurecollection that contains reference and index properties
@@ -196,6 +197,7 @@ def TOC_FeatureCollection(FC: ee.featurecollection, QCName: str, IndexnameList: 
     :param booluniformline: (bool) whether to show uniform line on the diagram
     :param Classname: (string) The name of class property when applying stratified sampling
     :param ClassList: (disctionary) The size of stratums {classname: classsize, classname: classsize ...}
+    :param unit: (str) the unit of each record
     :return: No return
     '''
 
@@ -210,7 +212,7 @@ def TOC_FeatureCollection(FC: ee.featurecollection, QCName: str, IndexnameList: 
         x = ee.String(x)
         num = IndexbandnameList.indexOf(x)
         threshold = ee.List(thresholdList.get(num))
-        result1 = TOC_feature_coor(FC, QCName, x, threshold,Classname=Classname,ClassList=ClassList)
+        result1 = TOC_Feature_coor(FC, QCName, x, threshold,Classname=Classname,ClassList=ClassList)
         return result1
     coordinates = IndexbandnameList.map(coordinateList)
     coordinates = coordinates.getInfo()
@@ -226,7 +228,7 @@ def TOC_FeatureCollection(FC: ee.featurecollection, QCName: str, IndexnameList: 
     Ylist = np.array(Ylist)
     curveNum = len(Xlist)
 
-    painter = painter_Generator(Xlist, Ylist, 'observations')
+    painter = painter_Generator(Xlist, Ylist, unit)
     painter.paintInit(boolUniform=booluniformline, boolCorrectcorner=boolcorrectcorner)
     for i in range(len(nameList)):
         if (boolcorrectcorner):
@@ -310,7 +312,8 @@ class painter_Generator:
         plt.show()
 
     def paintOne(self, index, Name, marker):
-        plt.plot(self.Xlist[index], self.Ylist[index], marker+'-', label=Name, picker=2)
+        plt.plot(self.Xlist[index], self.Ylist[index], marker + '-', label=Name, picker=2)
+        # plt.plot(self.Xlist[index], self.Ylist[index], marker+'-', label=Name, picker=2)
         handles, labels = plt.gca().get_legend_handles_labels()
         numCurve = len(handles)
         # change the order of maximum and minimum
@@ -435,6 +438,11 @@ def calculate_AUC(TOCX,TOCY,presenceInY,totalNum):
     Area03 = areaUnderCurve(np.array([[0, totalNum]]),np.array([[0, presenceInY]]))*2
     AUC = (Area01-Area02)/(Area03-2*Area02)
     return AUC
+def AUCfromResult(result):
+    if(type(result) != list):
+        result = result.getInfo()
+    AUC = calculate_AUC(np.array([np.array(result)[:, 0]]), np.array([np.array(result)[:, 1]]), result[-1][1], result[-1][0])
+    return AUC[0]
 def areaUnderCurve(listx, listy):  # compute the area under the curve
     if(listx[0,-1]>65536):
         listx=np.int64(listx)
@@ -485,34 +493,3 @@ def sumArray(arr1):
 def compareIndexArray(indexArray, number, sequence):
     Bi_index = ee.Algorithms.If(ee.Number(sequence).eq(0), indexArray.gte(ee.Number(number)), indexArray.lte(ee.Number(number)));
     return ee.Array(Bi_index);
-
-
-if(__name__ == '__main__'):
-    def getwater(image):
-        ndvi = image.normalizedDifference(['B8', 'B4']).rename('ndvi');
-        mndwi = image.normalizedDifference(['B3', 'B12']).rename('mndwi');
-        image = image.addBands(ndvi).addBands(mndwi);
-        return image;
-    img1 = getwater(ee.Image('projects/cloudtostreet/ML/coincident_S1S2_chipped/USA_348639'))
-    MNDWI = img1.select('mndwi')
-    NDVI = img1.select('ndvi')
-    QC = img1.select('QC')
-    ftc = ee.FeatureCollection('users/BAI_debug/source_test')
-    ftc = ftc.filterMetadata('startDate','equals','3/16/2019')
-    def changeQC(x):
-        x = ee.Feature(x)
-        x = x.set('QC',ee.Algorithms.If(ee.String(x.get('class')).length().lt(6),1,0))
-        return x
-    ftc_QC = ftc.map(changeQC)
-    TOC_Image_coor(QC,MNDWI,ee.List.sequence(-1,1,0.1,None).reverse(),-1,exportCoor='coordinates.txt',exportVariable='v1.txt')
-    TOC_Image_coor(QC, NDVI, ee.List.sequence(-1, 1, 0.1, None), -1, exportCoor='coordinates2.txt')
-    a = TOC_feature_coor(ftc_QC,'QC','ran',ee.List([0,0.5,1]),ClassList={'water':50,'non-water':50},Classname='class', exportCoor='coordinates3.txt',exportVariable='v2.txt')
-    print(a.getInfo())
-    print(ftc_QC.first().getInfo())
-    print(ftc_QC.aggregate_histogram('class').getInfo())
-    TOC_FeatureCollection(ftc_QC,'QC',['ran','ran'],[ee.List([0,0.5,1]),ee.List([0,0.5,1])],['ran_1','ran_2'],ClassList={'water':50,'non-water':50},Classname='class',boolcorrectcorner=True)
-
-
-    TOC_Image(img1, 'QC', ['mndwi','ndvi'], [ee.List.sequence(-1,1,0.1,None).reverse(),ee.List.sequence(-1,1,0.1,None)], -1, ['mndwi','ndvi'])
-
-
